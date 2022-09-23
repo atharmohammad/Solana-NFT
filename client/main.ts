@@ -48,12 +48,13 @@ const main = async()=>{
 
     const tx = new Transaction();
     console.log("Pinging ... !");
-    // const configYml = await fs.readFile(CONFIG_FILE_PATH, {encoding: 'utf8'});
-    // const keypairPath = await yaml.parse(configYml).keypair_path;
-    // const wallet = await createKeypairFromFile(keypairPath);
+    const configYml = await fs.readFile(CONFIG_FILE_PATH, {encoding: 'utf8'});
+    const keypairPath = await yaml.parse(configYml).keypair_path;
+    const wallet = await createKeypairFromFile(keypairPath);
+    console.log(wallet.publicKey.toString())
     const programKeypair = await createKeypairFromFile(PROGRAM_KEYPAIR_PATH);
     const mint = Keypair.generate();
-    const wallet = await createAccount(connection); //mint_authority is our wallet
+    // const wallet = await createAccount(connection); //mint_authority is our wallet
     const token_account = await getAssociatedTokenAddress(mint.publicKey,wallet.publicKey);
     const transactionInstruction = new TransactionInstruction({
         keys:[

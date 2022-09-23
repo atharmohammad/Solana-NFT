@@ -30,9 +30,9 @@ fn process_instructions(
     let _system_program = next_account_info(account_iter)?;
 
     msg!("Creating mint account !");
-    invoke(&system_instruction::create_account(&mint_authority.key, &mint.key, LAMPORTS_PER_SOL , 82, &token_account.key), 
+    invoke(&system_instruction::create_account(&mint_authority.key, &mint.key, LAMPORTS_PER_SOL , 82, &token_program.key), 
         &[
-            token_account.clone(),
+            token_program.clone(),
             mint.clone(),
             mint_authority.clone(),
         ]
@@ -49,9 +49,10 @@ fn process_instructions(
     )?; // decimals 0 for nft
     
     msg!("creating token account !");
-    invoke(&create_associated_token_account(token_account.key, mint_authority.key, mint.key, associated_token_program.key), 
+    invoke(&create_associated_token_account(&mint_authority.key, &mint_authority.key, &mint.key, &token_program.key), 
     &[
         token_account.clone(),
+        mint_authority.clone(),
         mint_authority.clone(),
         mint.clone(),
         token_program.clone(),
@@ -59,7 +60,7 @@ fn process_instructions(
     ])?;
     msg!("mint to token account");
     invoke(
-        &mint_to(token_program.key, mint.key, token_account.key, mint_authority.key, &[&mint_authority.key],1)?,
+        &mint_to(&token_program.key, &mint.key, &token_account.key, &mint_authority.key, &[&mint_authority.key],1)?,
         &[
             token_program.clone(),
             mint.clone(),
